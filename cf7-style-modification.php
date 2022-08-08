@@ -43,21 +43,30 @@ function cf7_style_activation(){
 function cf7_style_modification_add_styles(){
     $warning_image = 'wp-content/plugins/cf7-style-modification/public/images/attention.png';
     $success_image = 'wp-content/plugins/cf7-style-modification/public/images/accept_20.png';
-    $custom_css = "
-.wpcf7-response-output{
+    $cf7_style_modification_custom_css = ".wpcf7-response-output{
     position:relative;
 	line-height:1.4;
 	font-family:inherit;
 	display:flex;
-	align-items:flex-start;
+	align-items:flex-start!important;
 	font-family:inherit;
+	border-radius:4px!important;
+	padding:10px!important;
+	box-shadow:1px 5px 10px 3px #392e092b!important;
 }
-.wpcf7 form.invalid .wpcf7-response-output {
+.wpcf7 form.invalid .wpcf7-response-output,
+.wpcf7 form.spam .wpcf7-response-output{
 	color:#202020!important;
-    background: #fff3cd;
+    background: #fff3cd!important;
     border-color: #ffeeba!important;
 }
-.wpcf7 form.invalid .wpcf7-response-output:before {
+.wpcf7 form.invalid .wpcf7-response-output:before{
+    content: url($warning_image);
+    padding-right: 11px;
+    position:relative;
+    top:-2px;
+}
+.wpcf7 form.spam .wpcf7-response-output:before{
     content: url($warning_image);
     padding-right: 11px;
     position:relative;
@@ -65,20 +74,28 @@ function cf7_style_modification_add_styles(){
 }
 .wpcf7 form.sent .wpcf7-response-output{
 	color: #155724!important;
-    background-color: #d4edda;
+    background-color: #d4edda!important;
     border-color: #c3e6cb!important;
-	display:flex;
-	align-items:center;
 }
 .wpcf7 form.sent .wpcf7-response-output:before{
     content:url($success_image);
     padding-right: 11px;
     position:relative;
-    top:0px;
+    top:2px;
 }";
+
+    $cf7_style_modification_custom_scripts = "
+    jQuery('.wpcf7-form-control').prop('required',true);
+    jQuery('.wpcf7-form').removeAttr('novalidate');
+    ";
+
     wp_register_style( 'cf7-style-handle', false );
     wp_enqueue_style( 'cf7-style-handle' );
-    wp_add_inline_style('cf7-style-handle', $custom_css);
+    wp_add_inline_style('cf7-style-handle', $cf7_style_modification_custom_css);
+
+    wp_register_script( 'cf7-style-script-handle', '', [], '', true );
+    wp_enqueue_script( 'cf7-style-script-handle');
+    wp_add_inline_script( 'cf7-style-script-handle', $cf7_style_modification_custom_scripts );
 }
 
 if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
